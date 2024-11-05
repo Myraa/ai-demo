@@ -1,17 +1,25 @@
 # train.py
-import mlflow
 import tensorflow as tf
+from tensorflow.keras.layers import Dense, Flatten
+from tensorflow.keras.models import Sequential
 
-def train_model():
-    # Load and preprocess data, define model, etc.
-    # ...
+def load_data():
+    from tensorflow.keras.datasets import mnist
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    x_train, x_test = x_train / 255.0, x_test / 255.0
+    return (x_train, y_train), (x_test, y_test)
 
-    # Start MLflow run
-    with mlflow.start_run():  
-        # Log parameters, metrics, model, etc.
-        # ...
-        pass
+def create_model():
+    model = Sequential([
+        Flatten(input_shape=(28, 28)),
+        Dense(128, activation='relu'),
+        Dense(10, activation='softmax')
+    ])
+    return model
 
-
-if __name__ == "__main__":
-    train_model()
+def train_model(model, x_train, y_train, epochs=5, batch_size=32):
+    model.compile(optimizer='adam',
+                  loss='sparse_categorical_crossentropy',
+                  metrics=['accuracy'])
+    history = model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size)
+    return history

@@ -42,7 +42,7 @@ jobs:
 
       - name: Push Docker Image to Docker Hub
         run: |
-          docker tag my_ml_model_image:latest $DOCKER_HUB_USERNAME/ai_demo_model_image:latest
+          docker tag ai_demo_model_image:latest $DOCKER_HUB_USERNAME/ai_demo_model_image:latest
           docker push $DOCKER_HUB_USERNAME/ai_demo_model_image:latest
 
       - name: Run Model Training in Docker

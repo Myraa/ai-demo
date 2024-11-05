@@ -6,6 +6,6 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY src/ /app/src  # Copy the source code to /app/src
+COPY . .
 
-ENTRYPOINT ["python", "src/train.py"]
+ENTRYPOINT ["python", "train.py"]

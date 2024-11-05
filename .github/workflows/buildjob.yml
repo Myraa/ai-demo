@@ -18,3 +18,36 @@ jobs:
         run: flake8 src/
       - name: Run Unit Tests
         run: pytest src/tests/
+
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Build Docker Image
+        run: |
+          docker build -t my_ml_model_image:latest .
+
+      - name: Log in to Docker Hub
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+        run: |
+          echo "$DOCKER_HUB_ACCESS_TOKEN" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+
+      - name: Push Docker Image to Docker Hub
+        run: |
+          docker tag my_ml_model_image:latest mydockerhubaccount/my_ml_model_image:latest
+          docker push mydockerhubaccount/my_ml_model_image:latest
+
+      - name: Run Model Training in Docker
+        run: |
+          docker run --rm my_ml_model_image:latest
+
+      - name: Deploy Model
+        if: success() && steps.train.outputs.metrics.accuracy > 0.95
+        run: |
+          # Deployment code here, such as uploading to a model registry
+          mlflow models serve -m /path/to/model -h 0.0.0.0 -p 5000

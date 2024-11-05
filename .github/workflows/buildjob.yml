@@ -27,6 +27,12 @@ jobs:
         run: |
           docker build -t ai_demo_model_image:latest .
 
+      - name: Verify Docker Hub Credentials
+        run: |
+          echo "Docker Hub Username: $DOCKER_HUB_USERNAME"
+          echo "Docker Hub Access Token Length: ${#DOCKER_HUB_ACCESS_TOKEN}"
+    # Do NOT print the access token directly to avoid leaking it
+
       - name: Log in to Docker Hub
         env:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}

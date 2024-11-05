@@ -28,7 +28,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t my_ml_model_image:latest .
+          docker build -t ai_demo_model_image:latest .
 
       - name: Log in to Docker Hub
         env:
@@ -39,12 +39,12 @@ jobs:
 
       - name: Push Docker Image to Docker Hub
         run: |
-          docker tag my_ml_model_image:latest mydockerhubaccount/my_ml_model_image:latest
-          docker push mydockerhubaccount/my_ml_model_image:latest
+          docker tag my_ml_model_image:latest $DOCKER_HUB_USERNAME/ai_demo_model_image:latest
+          docker push $DOCKER_HUB_USERNAME/ai_demo_model_image:latest
 
       - name: Run Model Training in Docker
         run: |
-          docker run --rm my_ml_model_image:latest
+          docker run --rm ai_demo_model_image:latest
 
       - name: Deploy Model
         if: success() && steps.train.outputs.metrics.accuracy > 0.95

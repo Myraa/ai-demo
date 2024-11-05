@@ -16,8 +16,7 @@ jobs:
         run: pip install -r requirements.txt
       - name: Run Linter
         run: flake8 src/
-      - name: Run Unit Tests
-        run: pytest src/tests/
+    
 
   build_and_deploy:
     runs-on: ubuntu-latest

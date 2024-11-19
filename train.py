@@ -9,6 +9,8 @@ def load_data():
     x_train, x_test = x_train / 255.0, x_test / 255.0
     return (x_train, y_train), (x_test, y_test)
 
+print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
+
 def create_model():
     model = Sequential([
         Flatten(input_shape=(28, 28)),
